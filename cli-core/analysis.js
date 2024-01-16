@@ -63,6 +63,14 @@ async function analyseScenario(browser, pageInformations, options, translator, p
     scenarioResult.index = options.index;
     scenarioResult.url = pageInformations.url;
 
+    if (scenarioResult.pages) {
+        scenarioResult.pages.forEach((page) => {
+            if (page.actions) {
+                scenarioResult.grade = page.actions[page.actions.length - 1].grade;
+                scenarioResult.ecoIndex = page.actions[page.actions.length - 1].ecoIndex;
+            };
+        });
+    }
     return scenarioResult;
 }
 
