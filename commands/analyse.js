@@ -6,6 +6,7 @@ const createJsonReports = require('../cli-core/analysis.js').createJsonReports;
 const login = require('../cli-core/analysis.js').login;
 const create_global_report = require('../cli-core/reportGlobal.js').create_global_report;
 const create_XLSX_report = require('../cli-core/reportExcel.js').create_XLSX_report;
+const create_JSON_report = require('../cli-core/reportJson.js').create_JSON_report;
 const create_html_report = require('../cli-core/reportHtml.js').create_html_report;
 const writeToInflux = require('../cli-core/influxdb').write;
 const translator = require('../cli-core/translator.js').translator;
@@ -93,8 +94,10 @@ async function analyse_core(options) {
         await create_html_report(reportObj, options, translator, false);
     } else if (reportFormat === 'influxdb') {
         await writeToInflux(reports, options);
-    } else {
+    } else if (reportFormat === 'xlsx') {
         await create_XLSX_report(reportObj, options, translator);
+    } else {
+        await create_JSON_report(reportObj, options, translator);
     }
 }
 
@@ -129,7 +132,7 @@ function readHeaders(headersFile) {
 
 function getReportFormat(format, filename) {
     // Check if format is defined
-    const formats = ['xlsx', 'html', 'influxdb', 'influxdbhtml'];
+    const formats = ['xlsx', 'html', 'influxdb', 'influxdbhtml', 'json'];
     if (format && formats.includes(format.toLowerCase())) {
         return format.toLowerCase();
     }
