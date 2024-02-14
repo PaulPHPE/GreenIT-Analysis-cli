@@ -3,7 +3,7 @@ const path = require('path');
 const utils = require('./utils');
 
 //create xlsx report for all the analysed pages and recap on the first sheet
-async function create_JSON_report(reportObject, options, translator) {
+async function create_JSON_report(reportObject, options) {
     const OUTPUT_FILE = path.resolve(options.report_output_file);
     const fileList = reportObject.reports;
     const globalReport = reportObject.globalReport;

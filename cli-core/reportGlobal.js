@@ -68,6 +68,8 @@ async function create_global_report(reports, options, translator) {
     let worstPages = [];
     let bestPracticesTotal = {};
     let nbBestPracticesToCorrect = 0;
+    let averageGreenhouseGasesEmission = 0;
+    let counter = 0;
 
     //Creating one report sheet per file
     reports.forEach((file) => {
@@ -90,6 +92,13 @@ async function create_global_report(reports, options, translator) {
             nbBestPracticesToCorrect += obj.nbBestPracticesToCorrect;
             handleWorstPages(obj, worstPages);
             obj.pages.forEach((page) => {
+                // Construct average GreenhouseGasesEmission
+                if (page.actions) {
+                    if (page.actions[page.actions.length - 1].greenhouseGasesEmission) {
+                        averageGreenhouseGasesEmission += page.actions[page.actions.length - 1].greenhouseGasesEmission;
+                        counter++;
+                    }
+                }
                 if (page.bestPractices) {
                     for (let key in page.bestPractices) {
                         bestPracticesTotal[key] = bestPracticesTotal[key] || 0;
@@ -140,6 +149,7 @@ async function create_global_report(reports, options, translator) {
         worstPages: worstPages,
         worstRules: handleWorstRule(bestPracticesTotal, WORST_RULES),
         nbBestPracticesToCorrect: nbBestPracticesToCorrect,
+        averageGreenhouseGasesEmission: (averageGreenhouseGasesEmission/counter).toFixed(2),
     };
 
     if (progressBar) progressBar.tick();
